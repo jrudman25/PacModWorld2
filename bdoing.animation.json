@@ -1,0 +1,21 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"bounce": {
+			"animation_length": 0.25,
+			"bones": {
+				"inside": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.125": {
+							"vector": [0, -2, 0]
+						}
+					}
+				}
+			},
+			"particle_effects": {}
+		}
+	}
+}
