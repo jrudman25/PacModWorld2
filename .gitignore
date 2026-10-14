@@ -24,3 +24,5 @@ Thumbs.db
 
 # Misc
 .tools/
+
+neoforge-1.21.1/src/generated/resources/.cache/
