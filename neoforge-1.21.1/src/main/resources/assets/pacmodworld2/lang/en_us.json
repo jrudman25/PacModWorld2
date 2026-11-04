@@ -1,1 +1,6 @@
-{}
+{
+    "block.pacmodworld2.bdoing": "B-Doing",
+    "entity.pacmodworld2.red_rat": "Red Rat",
+    "item.pacmodworld2.red_rat_spawn_egg": "Red Rat Spawn Egg",
+    "itemGroup.pacmodworld2": "PacModWorld2"
+}

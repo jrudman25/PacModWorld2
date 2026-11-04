@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "part=north_west": { "model": "pacmodworld2:block/bdoing" },
+        "part=north": { "model": "pacmodworld2:block/bdoing" },
+        "part=north_east": { "model": "pacmodworld2:block/bdoing" },
+        "part=west": { "model": "pacmodworld2:block/bdoing" },
+        "part=center": { "model": "pacmodworld2:block/bdoing" },
+        "part=east": { "model": "pacmodworld2:block/bdoing" },
+        "part=south_west": { "model": "pacmodworld2:block/bdoing" },
+        "part=south": { "model": "pacmodworld2:block/bdoing" },
+        "part=south_east": { "model": "pacmodworld2:block/bdoing" }
+    }
+}

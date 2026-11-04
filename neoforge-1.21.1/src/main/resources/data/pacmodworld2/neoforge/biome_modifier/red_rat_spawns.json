@@ -1,0 +1,10 @@
+{
+    "type": "neoforge:add_spawns",
+    "biomes": "#pacmodworld2:spawns_red_rat",
+    "spawners": {
+        "type": "pacmodworld2:red_rat",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 3
+    }
+}

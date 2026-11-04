@@ -1,0 +1,12 @@
+{
+    "parent": "builtin/entity",
+    "display": {
+        "gui": { "scale": [0.2, 0.2, 0.2] },
+        "ground": { "scale": [0.15, 0.15, 0.15] },
+        "fixed": { "scale": [0.15, 0.15, 0.15] },
+        "firstperson_righthand": { "scale": [0.15, 0.15, 0.15] },
+        "firstperson_lefthand": { "scale": [0.15, 0.15, 0.15] },
+        "thirdperson_righthand": { "scale": [0.15, 0.15, 0.15] },
+        "thirdperson_lefthand": { "scale": [0.15, 0.15, 0.15] }
+    }
+}
