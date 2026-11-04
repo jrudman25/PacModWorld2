@@ -9,6 +9,7 @@ import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTest;
+import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +18,7 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -33,6 +35,14 @@ import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 public class RedRatGameTests {
     private static final int BREATH_Y = 1;
 
+    private static void layGrass(GameTestHelper helper) {
+        for (int x = 0; x < 9; x++) {
+            for (int z = 0; z < 9; z++) {
+                helper.setBlock(new BlockPos(x, 0, z), Blocks.GRASS_BLOCK);
+            }
+        }
+    }
+
     @GameTest(template = "empty_9x12x9")
     public void breathIgnitesTargetInConeAndNotBlocks(GameTestHelper helper) {
         for (int x = 0; x < 9; x++) {
@@ -47,7 +57,8 @@ public class RedRatGameTests {
         Pig rearPig = helper.spawnWithNoFreeWill(EntityType.PIG, new Vec3(4.5, BREATH_Y, 0.5));
 
         rat.lookAt(EntityAnchorArgument.Anchor.EYES, frontPig.getEyePosition());
-        FlameBreath.breathe(rat);
+        Vec3 aim = frontPig.getBoundingBox().getCenter().subtract(rat.getEyePosition()).normalize();
+        FlameBreath.breathe(rat, aim);
 
         if (frontPig.getRemainingFireTicks() <= 0) {
             helper.fail("Front pig is not on fire");
@@ -134,6 +145,25 @@ public class RedRatGameTests {
             level.getServer().setDifficulty(original, true);
         }
         helper.succeed();
+    }
+
+    @GameTest(template = "empty_9x12x9", timeoutTicks = 60)
+    public void ratHitsTallTargetAtCloseRange(GameTestHelper helper) {
+        layGrass(helper);
+
+        RedRatEntity rat = helper.spawn(ModEntities.RED_RAT.get(), new Vec3(4.5, BREATH_Y, 2.5));
+        rat.setYRot(0.0F);
+        rat.setYBodyRot(0.0F);
+        rat.setYHeadRot(0.0F);
+        Villager villager = helper.spawnWithNoFreeWill(EntityType.VILLAGER, new Vec3(4.5, BREATH_Y, 0.5));
+        rat.setTarget(villager);
+
+        helper.succeedWhen(() -> {
+            if (villager.getHealth() >= villager.getMaxHealth() || villager.getRemainingFireTicks() <= 0) {
+                throw new GameTestAssertException("Villager unhurt (health=" + villager.getHealth()
+                    + ", fireTicks=" + villager.getRemainingFireTicks() + ")");
+            }
+        });
     }
 
     @GameTest(template = "empty_9x12x9")

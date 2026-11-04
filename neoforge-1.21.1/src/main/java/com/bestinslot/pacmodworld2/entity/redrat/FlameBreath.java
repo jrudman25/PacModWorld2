@@ -17,13 +17,12 @@ public final class FlameBreath {
     private FlameBreath() {
     }
 
-    public static void breathe(RedRatEntity rat) {
+    public static void breathe(RedRatEntity rat, Vec3 aim) {
         Level level = rat.level();
         if (level.isClientSide) {
             return;
         }
         Vec3 eye = rat.getEyePosition();
-        Vec3 look = rat.getLookAngle().normalize();
         AABB search = rat.getBoundingBox().inflate(RANGE);
         for (LivingEntity target : level.getEntitiesOfClass(LivingEntity.class, search,
             entity -> entity != rat && !(entity instanceof RedRatEntity))) {
@@ -32,7 +31,7 @@ public final class FlameBreath {
             if (distance > RANGE) {
                 continue;
             }
-            if (distance > 0.0 && toTarget.normalize().dot(look) < CONE_COS) {
+            if (distance > 0.0 && toTarget.normalize().dot(aim) < CONE_COS) {
                 continue;
             }
             if (!rat.hasLineOfSight(target)) {
@@ -45,7 +44,7 @@ public final class FlameBreath {
         if (level instanceof ServerLevel serverLevel) {
             for (int i = 0; i < 12; i++) {
                 double distance = 0.5 + (RANGE - 0.5) * i / 11.0;
-                Vec3 point = eye.add(look.scale(distance));
+                Vec3 point = eye.add(aim.scale(distance));
                 serverLevel.sendParticles(ParticleTypes.FLAME, point.x, point.y, point.z, 1, 0.05, 0.05, 0.05, 0.0);
             }
         }

@@ -12,6 +12,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -39,6 +40,20 @@ public class BDoingGameTests {
                 throw new GameTestAssertException("Pig has not reached apex yet (maxY=" + maxY[0] + ", required=" + requiredY + ")");
             }
         });
+    }
+
+    @GameTest(template = "empty_9x12x9", timeoutTicks = 60)
+    public void standingStillDoesNotBounce(GameTestHelper helper) {
+        BDoingBlock.placeAt(helper.getLevel(), helper.absolutePos(CENTER));
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, new Vec3(4.5, 1.75, 4.5));
+
+        double padTop = helper.absolutePos(CENTER).getY() + 0.75;
+        helper.failIfEver(() -> {
+            if (pig.getY() > padTop + 0.5) {
+                throw new GameTestAssertException("Standing pig bounced to y=" + pig.getY());
+            }
+        });
+        helper.runAtTickTime(40, helper::succeed);
     }
 
     @GameTest(template = "empty_9x12x9")

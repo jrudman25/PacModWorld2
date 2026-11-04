@@ -32,6 +32,8 @@ public class BDoingBlock extends BaseEntityBlock {
     public static final EnumProperty<BDoingPart> PART = EnumProperty.create("part", BDoingPart.class);
     // ~6 block apex under real LivingEntity physics (per tick: v -= 0.08; y += v; v *= 0.98; plus a same-tick *0.98 on the set value).
     public static final double BOUNCE_VELOCITY = 1.13;
+    // Below this downward speed the entity is standing, not landing; gravity alone leaves ~-0.078 per tick.
+    private static final double MIN_LANDING_SPEED = 0.2;
     private static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 12.0, 16.0);
 
     public BDoingBlock(Properties properties) {
@@ -153,7 +155,7 @@ public class BDoingBlock extends BaseEntityBlock {
             return;
         }
         Vec3 deltaMovement = entity.getDeltaMovement();
-        if (deltaMovement.y < 0.0) {
+        if (deltaMovement.y < -MIN_LANDING_SPEED) {
             entity.setDeltaMovement(deltaMovement.x, BOUNCE_VELOCITY, deltaMovement.z);
             if (!entity.level().isClientSide) {
                 BlockPos partPos = entity.getOnPos();
@@ -166,6 +168,8 @@ public class BDoingBlock extends BaseEntityBlock {
                     entity.level().playSound(null, center, SoundEvents.SLIME_BLOCK_FALL, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
             }
+        } else {
+            super.updateEntityAfterFallOn(level, entity);
         }
     }
 }

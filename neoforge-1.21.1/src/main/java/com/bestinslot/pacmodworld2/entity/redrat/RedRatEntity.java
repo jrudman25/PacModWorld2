@@ -3,6 +3,7 @@ package com.bestinslot.pacmodworld2.entity.redrat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
@@ -32,6 +33,8 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class RedRatEntity extends Monster implements GeoEntity {
+    // Horizontal push per hop; HopMoveControl zeroes ground speed, so without this each hop is nearly vertical.
+    private static final double HOP_FORWARD_BOOST = 0.25;
     private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("idle");
     private static final RawAnimation JUMP_ANIM = RawAnimation.begin().thenPlay("jump");
     private static final RawAnimation BREATHFIRE_ANIM = RawAnimation.begin().thenPlay("breathfire");
@@ -66,6 +69,16 @@ public class RedRatEntity extends Monster implements GeoEntity {
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+    }
+
+    @Override
+    public void jumpFromGround() {
+        super.jumpFromGround();
+        if (this.zza > 0.0F) {
+            float yaw = this.getYRot() * Mth.DEG_TO_RAD;
+            this.setDeltaMovement(this.getDeltaMovement().add(
+                -Mth.sin(yaw) * HOP_FORWARD_BOOST, 0.0, Mth.cos(yaw) * HOP_FORWARD_BOOST));
+        }
     }
 
     @Override
