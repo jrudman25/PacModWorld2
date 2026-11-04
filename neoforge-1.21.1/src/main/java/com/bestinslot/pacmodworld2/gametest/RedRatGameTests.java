@@ -167,6 +167,44 @@ public class RedRatGameTests {
     }
 
     @GameTest(template = "empty_9x12x9")
+    public void breathBlockedByWall(GameTestHelper helper) {
+        layGrass(helper);
+        for (int x = 3; x <= 5; x++) {
+            helper.setBlock(new BlockPos(x, 1, 4), Blocks.STONE);
+            helper.setBlock(new BlockPos(x, 2, 4), Blocks.STONE);
+        }
+
+        RedRatEntity rat = helper.spawnWithNoFreeWill(ModEntities.RED_RAT.get(), new Vec3(4.5, BREATH_Y, 2.5));
+        Pig pig = helper.spawnWithNoFreeWill(EntityType.PIG, new Vec3(4.5, BREATH_Y, 5.5));
+
+        Vec3 aim = pig.getBoundingBox().getCenter().subtract(rat.getEyePosition()).normalize();
+        FlameBreath.breathe(rat, aim);
+
+        if (pig.getHealth() != pig.getMaxHealth()) {
+            helper.fail("Pig took damage through the wall");
+        }
+        if (pig.getRemainingFireTicks() > 0) {
+            helper.fail("Pig caught fire through the wall");
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty_9x12x9", timeoutTicks = 120)
+    public void ratHopsToTarget(GameTestHelper helper) {
+        layGrass(helper);
+
+        RedRatEntity rat = helper.spawn(ModEntities.RED_RAT.get(), new Vec3(1.5, BREATH_Y, 1.5));
+        Villager villager = helper.spawnWithNoFreeWill(EntityType.VILLAGER, new Vec3(7.5, BREATH_Y, 7.5));
+        rat.setTarget(villager);
+
+        helper.succeedWhen(() -> {
+            if (rat.distanceTo(villager) > 3.5) {
+                throw new GameTestAssertException("Rat still " + rat.distanceTo(villager) + " blocks away");
+            }
+        });
+    }
+
+    @GameTest(template = "empty_9x12x9")
     public void ratIsFireImmune(GameTestHelper helper) {
         RedRatEntity rat = helper.spawnWithNoFreeWill(ModEntities.RED_RAT.get(), new Vec3(4.5, BREATH_Y, 4.5));
         rat.igniteForSeconds(5.0F);
