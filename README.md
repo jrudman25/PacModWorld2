@@ -36,6 +36,12 @@ Requires JDK 21. On Windows, `gradlew.bat` uses `JAVA21_HOME` if it is set.
 - `./gradlew runClient` launches a development client
 - `./gradlew runGameTestServer` runs the automated game tests
 
+## Documentation
+
+The documentation site is at <https://jrudman25.github.io/PacModWorld2/>. Its
+source lives in `docs/` (Astro + Starlight) and deploys to GitHub Pages on
+pushes to `main` that touch `docs/`.
+
 ## License
 
 [MIT](LICENSE)
