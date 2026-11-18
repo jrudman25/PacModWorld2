@@ -3,7 +3,7 @@ title: Changelog
 description: Release history for PacModWorld2.
 ---
 
-## 0.1.0 — in development
+## 0.1.0 (in development)
 
 Not yet released. Targets Minecraft 1.21.1 on NeoForge.
 

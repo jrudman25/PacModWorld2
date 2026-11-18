@@ -14,6 +14,10 @@ export default defineConfig({
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/jrudman25/PacModWorld2' },
 			],
+			customCss: ['./src/styles/custom.css'],
+			editLink: {
+				baseUrl: 'https://github.com/jrudman25/PacModWorld2/edit/main/docs/',
+			},
 			sidebar: [
 				{
 					label: 'Getting Started',

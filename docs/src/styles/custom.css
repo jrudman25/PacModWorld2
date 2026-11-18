@@ -1,0 +1,8 @@
+/*
+ * Starlight highlights a "On this page" entry when its section reaches a thin band
+ * just below the header. Short pages cannot scroll far enough for the last sections
+ * to reach that band, so add enough bottom space for the end of the page to get there.
+ */
+[data-has-toc] main {
+	padding-bottom: max(0px, calc(100vh - var(--sl-nav-height) - 6rem));
+}
